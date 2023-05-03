@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
+import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
 import com.otiutiunnyk.diploma.parking_app.components.TopBar
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
 
@@ -32,9 +33,9 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { TopBar() },
-        drawerContent = {},
-        drawerGesturesEnabled = scaffoldState.drawerState.isOpen, //allows to close gestures only if the drawerMenu is open
-//        drawerGesturesEnabled = false, //discard the unnecessary gestures to open the drawerMenu
+        drawerContent = { DrawerMenu(scaffoldState = scaffoldState, scope = coroutineScope)},
+//        drawerGesturesEnabled = scaffoldState.drawerState.isOpen, //allows to close gestures only if the drawerMenu is open
+        drawerGesturesEnabled = false, //discards the unnecessary gestures to open the drawerMenu
         bottomBar = {
             BottomMenu(
                 navController = navController,
