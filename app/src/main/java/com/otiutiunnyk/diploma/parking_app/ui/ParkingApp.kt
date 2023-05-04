@@ -12,10 +12,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.otiutiunnyk.diploma.parking_app.BottomMenuData
+import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
 import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
 import com.otiutiunnyk.diploma.parking_app.components.TopBar
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
+import com.otiutiunnyk.diploma.parking_app.ui.screen.drawer.AboutScreen
 
 @Composable
 fun ParkingApp() {
@@ -60,6 +63,8 @@ fun Navigation(navController: NavHostController, scrollState: ScrollState) {
 //            val newsData = MockData.getNews(id)
 //            DetailScreen(newsData, scrollState, navController)
         }
+        bottomNavigation()
+        drawerNavigation()
     }
 }
 
@@ -75,5 +80,23 @@ fun NavGraphBuilder.bottomNavigation() {
     }
     composable(BottomMenuScreen.Menu.route) {
         MenuScreen()
+    }
+}
+
+fun NavGraphBuilder.drawerNavigation() {
+    composable(DrawerMenuData.AccountSettings.route!!) {
+    }
+    composable(DrawerMenuData.GeneralSettings.route!!) {
+    }
+    composable(DrawerMenuData.History.route!!) {
+    }
+    composable(DrawerMenuData.InviteFriend.route!!) {
+    }
+    composable(DrawerMenuData.ReportIssue.route!!) {
+    }
+    composable(DrawerMenuData.About.route!!) {
+        AboutScreen()
+    }
+    composable(DrawerMenuData.SignOut.route!!) {
     }
 }
