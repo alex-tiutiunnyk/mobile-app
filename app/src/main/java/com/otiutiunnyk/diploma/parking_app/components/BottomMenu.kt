@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.otiutiunnyk.diploma.parking_app.BottomMenuData
 import com.otiutiunnyk.diploma.parking_app.R
-import com.otiutiunnyk.diploma.parking_app.ui.screen.BottomMenuScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -16,10 +16,10 @@ import kotlinx.coroutines.launch
 fun BottomMenu(navController: NavController, scaffoldState: ScaffoldState, scope: CoroutineScope) {
 
     val menuItems = listOf(
-        BottomMenuScreen.AddNewPlace,
-        BottomMenuScreen.FavouritePlaces,
-        BottomMenuScreen.Explore,
-        BottomMenuScreen.Menu
+        BottomMenuData.AddNewPlace,
+        BottomMenuData.FavouritePlaces,
+        BottomMenuData.Explore,
+        BottomMenuData.Menu
     )
 
     BottomNavigation(contentColor = colorResource(id = R.color.white))
@@ -27,12 +27,12 @@ fun BottomMenu(navController: NavController, scaffoldState: ScaffoldState, scope
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         menuItems.forEach {
-            if (it.route == "configure menu") {
+            if (it.route == BottomMenuData.Menu.route) {
                 BottomNavigationItem(
                     label = { Text(text = it.title) },
                     alwaysShowLabel = true,
                     selectedContentColor = Color.White,
-                    unselectedContentColor = Color.Gray,
+                    unselectedContentColor = Color.White.copy(0.7f),
                     selected = currentRoute == it.route,
                     onClick = {
                         //scaffold changes
@@ -46,25 +46,13 @@ fun BottomMenu(navController: NavController, scaffoldState: ScaffoldState, scope
                             contentDescription = it.title
                         )
                     }
-//                    icon = {
-//                        IconButton(onClick = {
-//                            scope.launch{
-//                                scaffoldState.drawerState.open()
-//                            }
-//                        }) {
-//                            Icon(
-//                                imageVector = it.icon,
-//                                contentDescription = it.title
-//                            )
-//                        }
-//                    }
                 )
             } else {
                 BottomNavigationItem(
                     label = { Text(text = it.title) },
                     alwaysShowLabel = true,
                     selectedContentColor = Color.White,
-                    unselectedContentColor = Color.Gray,
+                    unselectedContentColor = Color.White.copy(0.7f),
                     selected = currentRoute == it.route,
                     onClick = {
                         navController.navigate(it.route) {
@@ -82,9 +70,8 @@ fun BottomMenu(navController: NavController, scaffoldState: ScaffoldState, scope
                             imageVector = it.icon,
                             contentDescription = it.title
                         )
-                    },
-
-                    )
+                    }
+                )
             }
         }
     }

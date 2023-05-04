@@ -3,15 +3,14 @@ package com.otiutiunnyk.diploma.parking_app.ui
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.otiutiunnyk.diploma.parking_app.BottomMenuData
 import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
 import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
@@ -49,15 +48,14 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
                 scope = coroutineScope
             )
         }) {
-        Navigation(navController = navController, scrollState = scrollState)
+        Navigation(navController = navController)
     }
 }
 
 @Composable
-fun Navigation(navController: NavHostController, scrollState: ScrollState) {
-    NavHost(navController = navController, startDestination = "explore") {
-        bottomNavigation()
-        composable("explore") {
+fun Navigation(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = BottomMenuData.Explore.route) {
+        composable(BottomMenuData.Explore.route) {
             ExploreScreen()
 //            arguments = listOf(
 //                navArgument("newsId") { type = NavType.IntType }
@@ -72,17 +70,17 @@ fun Navigation(navController: NavHostController, scrollState: ScrollState) {
 }
 
 fun NavGraphBuilder.bottomNavigation() {
-    composable(BottomMenuScreen.AddNewPlace.route) {
+    composable(BottomMenuData.AddNewPlace.route) {
         AddNewPlaceScreen()
     }
-    composable(BottomMenuScreen.FavouritePlaces.route) {
+    composable(BottomMenuData.FavouritePlaces.route) {
         FavouritesScreen()
     }
-    composable(BottomMenuScreen.Explore.route) {
+    composable(BottomMenuData.Explore.route) {
         ExploreScreen()
     }
-    composable(BottomMenuScreen.Menu.route) {
-        MenuScreen()
+    composable(BottomMenuData.Menu.route) {
+//        MenuScreen()
     }
 }
 

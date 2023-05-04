@@ -38,44 +38,9 @@ fun DrawerMenu(scaffoldState: ScaffoldState, scope: CoroutineScope, navControlle
     )
 
     Column(
-        modifier = Modifier
-//            .fillMaxWidth()
-            .padding(top = 30.dp, start = 20.dp, bottom = 20.dp)
+        modifier = Modifier.padding(top = 30.dp, start = 20.dp, bottom = 20.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) { //user circle
-            Card(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape),
-                backgroundColor = Color.LightGray
-            ) {
-                Text(
-                    text = "A",
-                    textAlign = TextAlign.Center, modifier = Modifier.padding(22.dp),
-                    fontWeight = FontWeight.Bold, fontSize = 25.sp
-                ) //userName[0].toString()
-            }
-
-            IconButton(onClick = {
-                scope.launch {
-                    scaffoldState.drawerState.close()
-                }
-            }) {
-                Icon(
-                    Icons.Outlined.ArrowBack, ""
-                )
-            }
-        }
-        Text(
-            modifier = Modifier.padding(top = 10.dp),
-            text = "Aleksandra Tiutiunnyk",
-            fontSize = 18.sp
-        ) //userName.toString()
+        HeaderDrawer(onClick = { drawerClose(scope, scaffoldState) })
 
         menuList.forEach { item ->
             when {
@@ -96,6 +61,39 @@ fun DrawerMenu(scaffoldState: ScaffoldState, scope: CoroutineScope, navControlle
                 onItemClick = { onItemClick(item, navController, scope, scaffoldState) })
         }
     }
+}
+
+@Composable
+fun HeaderDrawer(onClick: () -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Card(
+            modifier = Modifier
+                .size(80.dp)
+                .clip(CircleShape),
+            backgroundColor = Color.LightGray
+        ) {
+            Text(
+                text = "A",
+                textAlign = TextAlign.Center, modifier = Modifier.padding(22.dp),
+                fontWeight = FontWeight.Bold, fontSize = 25.sp
+            ) //TODO: userName[0].toString()
+        }
+
+        IconButton(onClick = { onClick() }) {
+            Icon(
+                Icons.Outlined.ArrowBack, ""
+            )
+        }
+    }
+    Text(
+        modifier = Modifier.padding(top = 10.dp),
+        text = "Aleksandra Tiutiunnyk",
+        fontSize = 18.sp
+    ) //TODO: userName.toString()
 }
 
 @Composable
