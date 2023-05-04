@@ -1,7 +1,6 @@
 package com.otiutiunnyk.diploma.parking_app.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -9,7 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -39,9 +36,6 @@ fun DrawerMenu(scaffoldState: ScaffoldState, scope: CoroutineScope, navControlle
         DrawerMenuData.About,
         DrawerMenuData.SignOut
     )
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
 
     Column(
         modifier = Modifier
@@ -91,7 +85,6 @@ fun DrawerMenu(scaffoldState: ScaffoldState, scope: CoroutineScope, navControlle
                 else -> {
                     DrawerItem(
                         item,
-                        selected = currentRoute == item.route,
                         onItemClick = { onItemClick(item, navController, scope, scaffoldState) })
                 }
             }
@@ -100,21 +93,18 @@ fun DrawerMenu(scaffoldState: ScaffoldState, scope: CoroutineScope, navControlle
         bottomMenuList.forEach { item ->
             DrawerItem(
                 item,
-                selected = currentRoute == item.route,
                 onItemClick = { onItemClick(item, navController, scope, scaffoldState) })
         }
     }
 }
 
 @Composable
-fun DrawerItem(item: DrawerMenuData, selected: Boolean, onItemClick: (DrawerMenuData) -> Unit) {
-    val background = if (selected) Color.LightGray else Color.Transparent
+fun DrawerItem(item: DrawerMenuData, onItemClick: (DrawerMenuData) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
             .padding(top = 16.dp)
-            .background(background)
             .clickable { onItemClick(item) }
     ) {
         Image(
