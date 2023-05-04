@@ -27,80 +27,45 @@ fun BottomMenu(navController: NavController, scaffoldState: ScaffoldState, scope
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         menuItems.forEach {
-            if (it.route == BottomMenuData.Menu.route) {
-                BottomNavigationItem(
-                    label = { Text(text = it.title) },
-                    alwaysShowLabel = true,
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.White.copy(0.7f),
-                    selected = currentRoute == it.route,
-                    onClick = {
-                        //scaffold changes
-                        scope.launch {
-                            scaffoldState.drawerState.open() //add the focus stop and maybe change the side
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = it.icon,
-                            contentDescription = it.title
-                        )
-                    }
-                )
-            } else {
-                BottomNavigationItem(
-                    label = { Text(text = it.title) },
-                    alwaysShowLabel = true,
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.White.copy(0.7f),
-                    selected = currentRoute == it.route,
-                    onClick = {
-                        navController.navigate(it.route) {
-                            navController.graph.startDestinationRoute?.let { route ->
-                                popUpTo(route) {
-                                    saveState = true
-                                }
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = it.icon,
-                            contentDescription = it.title
-                        )
-                    }
-                )
-            }
+            BottomNavigationItem(
+                label = { Text(text = it.title) },
+                alwaysShowLabel = true,
+                selectedContentColor = Color.White,
+                unselectedContentColor = Color.White.copy(0.7f),
+                selected = currentRoute == it.route,
+                onClick = {
+                    if (it.route == BottomMenuData.Menu.route)
+                        drawerOpen(scope, scaffoldState)
+                    else onNavigationItemClick(it, navController)
+                },
+                icon = {
+                    Icon(
+                        imageVector = it.icon,
+                        contentDescription = it.title
+                    )
+                }
+            )
         }
     }
 }
 
+fun drawerOpen(scope: CoroutineScope, scaffoldState: ScaffoldState) {
+    scope.launch {
+        scaffoldState.drawerState.open()
+    }
+}
 
-//
-//@Composable
-//fun BottomNavigationItem(currentRoute:String?, navController: NavController, it:BottomMenuScreen) {
-//        label = { Text(text = it.title) },
-//        alwaysShowLabel = true,
-//        selectedContentColor = Color.White,
-//        unselectedContentColor = Color.Gray,
-//        selected = currentRoute == it.route,
-//        onClick = {
-//            navController.navigate(it.route) {
-//                navController.graph.startDestinationRoute?.let { route ->
-//                    popUpTo(route) {
-//                        saveState = true
-//                    }
-//                }
-//                launchSingleTop = true
-//                restoreState = true
-//            }
-//        },
-//        icon = {
-//            Icon(
-//                imageVector = it.icon,
-//                contentDescription = it.title
-//            )
-//        }
-//}
+fun onNavigationItemClick(
+    it: BottomMenuData,
+    navController: NavController,
+) {
+    navController.navigate(it.route) {
+        navController.graph.startDestinationRoute?.let { route ->
+            popUpTo(route) {
+                saveState = true
+            }
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
