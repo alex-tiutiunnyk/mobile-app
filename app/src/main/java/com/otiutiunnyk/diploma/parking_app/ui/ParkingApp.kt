@@ -16,7 +16,6 @@ import com.otiutiunnyk.diploma.parking_app.BottomMenuData
 import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
 import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
-import com.otiutiunnyk.diploma.parking_app.components.TopBar
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
 import com.otiutiunnyk.diploma.parking_app.ui.screen.drawer.AboutScreen
 
@@ -35,10 +34,15 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = { TopBar() },
-        drawerContent = { DrawerMenu(scaffoldState = scaffoldState, scope = coroutineScope)},
-//        drawerGesturesEnabled = scaffoldState.drawerState.isOpen, //allows to close gestures only if the drawerMenu is open
-        drawerGesturesEnabled = false, //discards the unnecessary gestures to open the drawerMenu
+        drawerContent = {
+            DrawerMenu(
+                scaffoldState = scaffoldState,
+                scope = coroutineScope,
+                navController = navController
+            )
+        },
+        drawerGesturesEnabled = scaffoldState.drawerState.isOpen, //allows to close gestures only if the drawerMenu is open
+//        drawerGesturesEnabled = false, //discards the unnecessary gestures to open the drawerMenu
         bottomBar = {
             BottomMenu(
                 navController = navController,
