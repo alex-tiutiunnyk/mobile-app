@@ -14,6 +14,7 @@ import com.otiutiunnyk.diploma.parking_app.BottomMenuData
 import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
 import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
+import com.otiutiunnyk.diploma.parking_app.components.LocationFab
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
 import com.otiutiunnyk.diploma.parking_app.ui.screen.drawer.AboutScreen
 
@@ -47,7 +48,9 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
                 scaffoldState = scaffoldState,
                 scope = coroutineScope
             )
-        }) {
+        },
+        floatingActionButton = { LocationFab() })
+    {
         Navigation(navController = navController)
     }
 }
