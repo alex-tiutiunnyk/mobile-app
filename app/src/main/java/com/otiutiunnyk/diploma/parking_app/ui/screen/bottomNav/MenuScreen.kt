@@ -1,4 +1,4 @@
-package com.otiutiunnyk.diploma.parking_app.ui.screen
+package com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
