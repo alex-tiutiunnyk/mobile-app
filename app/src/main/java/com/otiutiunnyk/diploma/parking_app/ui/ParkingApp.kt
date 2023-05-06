@@ -16,7 +16,6 @@ import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
 import com.otiutiunnyk.diploma.parking_app.components.ParkingDialog
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
 import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
-import com.otiutiunnyk.diploma.parking_app.components.LocationFab
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.AddNewPlaceScreen
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.ExploreScreen
@@ -66,7 +65,8 @@ fun MainScreen(
                 scope = coroutineScope
             )
         },
-        floatingActionButton = { if (currentRoute == BottomMenuData.Explore.route) LocationFab() })
+    )
+//        floatingActionButton = { if (currentRoute == BottomMenuData.Explore.route) LocationFab() })
     {
         if (openDialog.value) {
             ParkingDialog(openDialog)
