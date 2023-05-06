@@ -13,6 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.otiutiunnyk.diploma.parking_app.BottomMenuData
 import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
+import com.otiutiunnyk.diploma.parking_app.components.ParkingDialog
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
 import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
 import com.otiutiunnyk.diploma.parking_app.components.LocationFab
@@ -45,6 +46,8 @@ fun MainScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
+    val openDialog = remember { mutableStateOf(true) }
+    val freePlacesNumber = remember { mutableStateOf(0) } //to pass the value to the server
     Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {
@@ -65,6 +68,9 @@ fun MainScreen(
         },
         floatingActionButton = { if (currentRoute == BottomMenuData.Explore.route) LocationFab() })
     {
+        if (openDialog.value) {
+            ParkingDialog(openDialog)
+        }
         Navigation(navController = navController)
     }
 }
