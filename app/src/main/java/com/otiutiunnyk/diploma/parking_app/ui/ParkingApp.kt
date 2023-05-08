@@ -9,27 +9,46 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.otiutiunnyk.diploma.parking_app.BottomMenuData
 import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
 import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
+import com.otiutiunnyk.diploma.parking_app.components.ParkingDialog
+import com.otiutiunnyk.diploma.parking_app.components.SubmitFab
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
+import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.AddNewPlaceScreen
+import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.ExploreScreen
+import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.FavouritesScreen
 import com.otiutiunnyk.diploma.parking_app.ui.screen.drawer.AboutScreen
 
 @Composable
 fun ParkingApp() {
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    MainScreen(navController = navController, scrollState = scrollState)
+    MainScreen(
+        navController = navController,
+        scrollState = scrollState,
+        currentRoute = currentRoute
+    )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
+fun MainScreen(
+    navController: NavHostController,
+    scrollState: ScrollState,
+    currentRoute: String?
+) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
+    val openNewParkingDialog = remember { mutableStateOf(false) }
+    val openAccelerometerDialog = remember { mutableStateOf(true) }
+    val freePlacesNumber = remember { mutableStateOf(0) } //to pass the value to the server
     Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {
@@ -47,13 +66,20 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
                 scaffoldState = scaffoldState,
                 scope = coroutineScope
             )
-        }) {
-        Navigation(navController = navController)
+        },
+        floatingActionButton = {
+            if (currentRoute == BottomMenuData.AddNewPlace.route) SubmitFab(openNewParkingDialog)
+        })
+    {
+//        if (openAccelerometerDialog.value) {
+//            ParkingDialog(openAccelerometerDialog)
+//        }
+        Navigation(navController = navController, openNewParkingDialog)
     }
 }
 
 @Composable
-fun Navigation(navController: NavHostController) {
+fun Navigation(navController: NavHostController, openNewParkingDialog:MutableState<Boolean>) {
     NavHost(navController = navController, startDestination = BottomMenuData.Explore.route) {
         composable(BottomMenuData.Explore.route) {
             ExploreScreen()
@@ -64,14 +90,14 @@ fun Navigation(navController: NavHostController) {
 //            val newsData = MockData.getNews(id)
 //            DetailScreen(newsData, scrollState, navController)
         }
-        bottomNavigation()
+        bottomNavigation(openNewParkingDialog)
         drawerNavigation()
     }
 }
 
-fun NavGraphBuilder.bottomNavigation() {
+fun NavGraphBuilder.bottomNavigation(openNewParkingDialog: MutableState<Boolean>) {
     composable(BottomMenuData.AddNewPlace.route) {
-        AddNewPlaceScreen()
+        AddNewPlaceScreen(openNewParkingDialog)
     }
     composable(BottomMenuData.FavouritePlaces.route) {
         FavouritesScreen()
@@ -80,7 +106,6 @@ fun NavGraphBuilder.bottomNavigation() {
         ExploreScreen()
     }
     composable(BottomMenuData.Menu.route) {
-//        MenuScreen()
     }
 }
 
