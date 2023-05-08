@@ -61,4 +61,18 @@ fun NewGoogleMaps(openNewParkingDialog: MutableState<Boolean>) {
             contentDescription = ""
         )
     }
+//    Text(
+//        text = "Is camera moving: ${cameraPositionState.isMoving}" + "\n Latitude and Longitude: ${cameraPositionState.position.target.latitude} and ${cameraPositionState.position.target.longitude}",
+//        textAlign = TextAlign.Center
+//    )
+
+    if (openNewParkingDialog.value) {
+        NewParkingRequestDialog(
+            openNewParkingDialog = openNewParkingDialog,
+            LatLng(
+                cameraPositionState.position.target.latitude,
+                cameraPositionState.position.target.longitude
+            )
+        )
+    }
 }
