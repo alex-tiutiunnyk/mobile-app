@@ -1,23 +1,25 @@
 package com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import com.otiutiunnyk.diploma.parking_app.R
+import com.otiutiunnyk.diploma.parking_app.components.NewParkingRequestDialog
 
 @Composable
-fun AddNewPlaceScreen() {
-    NewGoogleMaps()
+fun AddNewPlaceScreen(openNewParkingDialog: MutableState<Boolean>) {
+    NewGoogleMaps(openNewParkingDialog)
 }
 
 @Composable
-fun NewGoogleMaps() {
+fun NewGoogleMaps(openNewParkingDialog: MutableState<Boolean>) {
     val properties by remember {
         mutableStateOf(
             MapProperties(
@@ -37,18 +39,26 @@ fun NewGoogleMaps() {
         )
     }
     val kyiv = LatLng(50.44, 30.52)
+    val cameraPositionState =
+        rememberCameraPositionState { position = CameraPosition.fromLatLngZoom(kyiv, 12f) }
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         properties = properties,
         uiSettings = uiSettings,
-        cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(kyiv, 12f)
-        }
+        cameraPositionState = cameraPositionState
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 45.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Marker(
-            state = rememberMarkerState(position = kyiv), //change to the center always (see the video)
-            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+        Image(
+            painter = painterResource(id = R.drawable.map_icon_original),
+            modifier = Modifier.size(45.dp),
+            contentDescription = ""
         )
     }
 }

@@ -13,9 +13,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.otiutiunnyk.diploma.parking_app.BottomMenuData
 import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
-import com.otiutiunnyk.diploma.parking_app.components.ParkingDialog
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
 import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
+import com.otiutiunnyk.diploma.parking_app.components.ParkingDialog
+import com.otiutiunnyk.diploma.parking_app.components.SubmitFab
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.AddNewPlaceScreen
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.ExploreScreen
@@ -45,7 +46,8 @@ fun MainScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
-    val openDialog = remember { mutableStateOf(true) }
+    val openNewParkingDialog = remember { mutableStateOf(false) }
+    val openAccelerometerDialog = remember { mutableStateOf(true) }
     val freePlacesNumber = remember { mutableStateOf(0) } //to pass the value to the server
     Scaffold(
         scaffoldState = scaffoldState,
@@ -65,18 +67,19 @@ fun MainScreen(
                 scope = coroutineScope
             )
         },
-    )
-//        floatingActionButton = { if (currentRoute == BottomMenuData.Explore.route) LocationFab() })
+        floatingActionButton = {
+            if (currentRoute == BottomMenuData.AddNewPlace.route) SubmitFab(openNewParkingDialog)
+        })
     {
-        if (openDialog.value) {
-            ParkingDialog(openDialog)
-        }
-        Navigation(navController = navController)
+//        if (openAccelerometerDialog.value) {
+//            ParkingDialog(openAccelerometerDialog)
+//        }
+        Navigation(navController = navController, openNewParkingDialog)
     }
 }
 
 @Composable
-fun Navigation(navController: NavHostController) {
+fun Navigation(navController: NavHostController, openNewParkingDialog:MutableState<Boolean>) {
     NavHost(navController = navController, startDestination = BottomMenuData.Explore.route) {
         composable(BottomMenuData.Explore.route) {
             ExploreScreen()
@@ -87,14 +90,14 @@ fun Navigation(navController: NavHostController) {
 //            val newsData = MockData.getNews(id)
 //            DetailScreen(newsData, scrollState, navController)
         }
-        bottomNavigation()
+        bottomNavigation(openNewParkingDialog)
         drawerNavigation()
     }
 }
 
-fun NavGraphBuilder.bottomNavigation() {
+fun NavGraphBuilder.bottomNavigation(openNewParkingDialog: MutableState<Boolean>) {
     composable(BottomMenuData.AddNewPlace.route) {
-        AddNewPlaceScreen()
+        AddNewPlaceScreen(openNewParkingDialog)
     }
     composable(BottomMenuData.FavouritePlaces.route) {
         FavouritesScreen()
