@@ -3,6 +3,7 @@ package com.otiutiunnyk.diploma.parking_app.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -33,7 +35,8 @@ fun ParkingDialog(openDialog: MutableState<Boolean>) {
 
 @Composable
 fun ParkingDialogUI(openDialog: MutableState<Boolean>) {
-    var capacity: Int? by remember { mutableStateOf(0) }
+    var capacity: Int by remember { mutableStateOf(0) }
+    val maxCapacity = 150
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -44,16 +47,18 @@ fun ParkingDialogUI(openDialog: MutableState<Boolean>) {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-           //first row
-             Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
+            //first row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Looks like you're parked",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+                    fontSize = 18.sp
                 )
             }
 
@@ -73,33 +78,37 @@ fun ParkingDialogUI(openDialog: MutableState<Boolean>) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { capacity = capacity?.minus(1) },
+                    onClick = { capacity = capacity.minus(1) },
                     enabled = capacity != 0,
                     shape = CircleShape
 
                 ) {
                     Icon(imageVector = Icons.Outlined.Remove, contentDescription = "")
                 }
-                TextField(
+                OutlinedTextField (
                     modifier = Modifier
                         .height(50.dp)
-                        .width(70.dp)
-                        .padding(start = 10.dp, end = 10.dp),
+                        .width(60.dp),
                     value = capacity.toString(),
                     onValueChange = {
-                        if (it.isEmpty()) {
+                        if (it.isEmpty() || it < 0.toString()) {
                             capacity = 0
                         } else {
                             val i = it.toIntOrNull()
                             if (i != null) {
-                                capacity = i
+                                capacity = if(i > maxCapacity) {
+                                    maxCapacity
+                                } else
+                                    i
                             }
                         }
-                    }
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 OutlinedButton(
-                    onClick = { capacity = capacity?.plus(1) },
-                    enabled = true, //change to fullCapacity of the parking check
+                    onClick = { capacity = capacity.plus(1) },
+                    enabled = capacity < maxCapacity, //change to fullCapacity of the parking check
                     shape = CircleShape
                 ) {
                     Icon(imageVector = Icons.Outlined.Add, contentDescription = "")
@@ -107,10 +116,12 @@ fun ParkingDialogUI(openDialog: MutableState<Boolean>) {
             }
 
             //submit row
-            Row(modifier = Modifier
-                .fillMaxWidth(),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly) {
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
                 Button(
                     onClick = { openDialog.value = false },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
@@ -119,7 +130,7 @@ fun ParkingDialogUI(openDialog: MutableState<Boolean>) {
                     Text(text = "Cancel", color = MaterialTheme.colors.primary)
                 }
                 Button(
-                    onClick = { openDialog.value = false}, //send capacity somewhere and
+                    onClick = { openDialog.value = false }, //send capacity somewhere
                     shape = CircleShape
                 ) {
                     Text(text = "Submit")

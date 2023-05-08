@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
@@ -65,7 +66,8 @@ fun PermissionDeniedContent(
                         text = "Permission Request",
                         style = TextStyle(
                             fontWeight = FontWeight.Bold
-                        )
+                        ),
+                        fontSize = 18.sp
                     )
                 },
                 text = {

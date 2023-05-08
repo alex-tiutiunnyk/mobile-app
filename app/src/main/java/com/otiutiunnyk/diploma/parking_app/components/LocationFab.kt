@@ -13,16 +13,12 @@ import com.otiutiunnyk.diploma.parking_app.R
 @Composable
 fun LocationFab() {
     FloatingActionButton(
-        onClick = { /*TODO*/ }, //viewModel.location..?
+        onClick = { /*TODO*/ },
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = colorResource(R.color.purple_500)
     ) {
         Icon(imageVector = Icons.Outlined.MyLocation, contentDescription = "")
     }
-}
-
-fun goToMyLocationOnClick() {
-
 }
 
 @Preview(showBackground = true)
