@@ -1,11 +1,15 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package com.otiutiunnyk.diploma.parking_app.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,6 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.otiutiunnyk.diploma.parking_app.BottomMenuData
 import com.otiutiunnyk.diploma.parking_app.DrawerMenuData
+import com.otiutiunnyk.diploma.parking_app.MarkersData
 import com.otiutiunnyk.diploma.parking_app.api.models.User
 import com.otiutiunnyk.diploma.parking_app.api.models.viewModels.UserViewModel
 import com.otiutiunnyk.diploma.parking_app.components.BottomMenu
@@ -21,9 +26,12 @@ import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
 import com.otiutiunnyk.diploma.parking_app.components.SubmitFab
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.AddNewPlaceScreen
+import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.DetailedParkingPage
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.ExploreScreen
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.FavouritesScreen
 import com.otiutiunnyk.diploma.parking_app.ui.screen.drawer.AboutScreen
+import kotlinx.coroutines.CoroutineScope
+import java.util.*
 
 @Composable
 fun ParkingApp() {
@@ -51,13 +59,18 @@ fun MainScreen(
     val openNewParkingDialog = remember { mutableStateOf(false) }
     val openAccelerometerDialog = remember { mutableStateOf(true) }
     val freePlacesNumber = remember { mutableStateOf(0) } //to pass the value to the server
-    //test which one will work
+
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+
     val userViewModel: UserViewModel = viewModel()
     val userList = userViewModel.usersListResponse
     userViewModel.getUserList()
 
-    println("Test1: $userViewModel")
-    println("Test2: $userList")
+//    val userTest = User("loginTest1", "password3", "french", "ohavrykiak@gmail.com")
+//    val newUserTest = userViewModel.newUserResponse
+//    userViewModel.createNewUser(userTest)
+//    println("NewUserTest ${newUserTest.value}")
+
     Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {
@@ -68,12 +81,12 @@ fun MainScreen(
             )
         },
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen, //allows to close gestures only if the drawerMenu is open
-//        drawerGesturesEnabled = false, //discards the unnecessary gestures to open the drawerMenu
         bottomBar = {
             BottomMenu(
                 navController = navController,
                 scaffoldState = scaffoldState,
-                scope = coroutineScope
+                scope = coroutineScope,
+                bottomSheetScaffoldState = bottomSheetScaffoldState
             )
         },
         floatingActionButton = {
@@ -83,7 +96,13 @@ fun MainScreen(
 //        if (openAccelerometerDialog.value) {
 //            ParkingDialog(openAccelerometerDialog)
 //        }
-        Navigation(navController = navController, openNewParkingDialog, userList)
+        Navigation(
+            navController = navController,
+            openNewParkingDialog,
+            userList,
+            coroutineScope,
+            bottomSheetScaffoldState
+        )
     }
 }
 
@@ -91,11 +110,13 @@ fun MainScreen(
 fun Navigation(
     navController: NavHostController,
     openNewParkingDialog: MutableState<Boolean>,
-    userList: List<User>
+    userList: List<User>,
+    coroutineScope: CoroutineScope,
+    bottomSheetScaffoldState: BottomSheetScaffoldState
 ) {
     NavHost(navController = navController, startDestination = BottomMenuData.Explore.route) {
         composable(BottomMenuData.Explore.route) {
-            ExploreScreen()
+            ExploreScreen(navController, coroutineScope, bottomSheetScaffoldState)
 //            arguments = listOf(
 //                navArgument("newsId") { type = NavType.IntType }
 //            )) { navBackStackEntry ->
@@ -104,14 +125,24 @@ fun Navigation(
 //            DetailScreen(newsData, scrollState, navController)
         }
         println("Test3: $userList")
-        bottomNavigation(openNewParkingDialog, userList)
+        bottomNavigation(
+            openNewParkingDialog,
+            userList,
+            navController,
+            coroutineScope,
+            bottomSheetScaffoldState
+        )
         drawerNavigation()
+        commentsNavigation()
     }
 }
 
 fun NavGraphBuilder.bottomNavigation(
     openNewParkingDialog: MutableState<Boolean>,
-    userList: List<User>
+    userList: List<User>,
+    navController: NavController,
+    coroutineScope: CoroutineScope,
+    bottomSheetScaffoldState: BottomSheetScaffoldState
 ) {
     composable(BottomMenuData.AddNewPlace.route) {
         AddNewPlaceScreen(openNewParkingDialog)
@@ -121,7 +152,7 @@ fun NavGraphBuilder.bottomNavigation(
         FavouritesScreen(userList = userList)
     }
     composable(BottomMenuData.Explore.route) {
-        ExploreScreen()
+        ExploreScreen(navController, coroutineScope, bottomSheetScaffoldState)
     }
     composable(BottomMenuData.Menu.route) {
     }
@@ -142,5 +173,17 @@ fun NavGraphBuilder.drawerNavigation() {
         AboutScreen()
     }
     composable(DrawerMenuData.SignOut.route!!) {
+    }
+}
+
+fun NavGraphBuilder.commentsNavigation() {
+    composable(MarkersData.Marker1.route) {
+        DetailedParkingPage(item = MarkersData.Marker1)
+    }
+    composable(MarkersData.Marker2.route) {
+        DetailedParkingPage(item = MarkersData.Marker2)
+    }
+    composable(MarkersData.Marker3.route) {
+        DetailedParkingPage(item = MarkersData.Marker3)
     }
 }

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package com.otiutiunnyk.diploma.parking_app.components
 
 import androidx.compose.material.*
@@ -13,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun BottomMenu(navController: NavController, scaffoldState: ScaffoldState, scope: CoroutineScope) {
+fun BottomMenu(navController: NavController, scaffoldState: ScaffoldState, scope: CoroutineScope, bottomSheetScaffoldState: BottomSheetScaffoldState) {
 
     val menuItems = listOf(
         BottomMenuData.AddNewPlace,
@@ -36,7 +38,7 @@ fun BottomMenu(navController: NavController, scaffoldState: ScaffoldState, scope
                 onClick = {
                     if (it.route == BottomMenuData.Menu.route)
                         drawerOpen(scope, scaffoldState)
-                    else onNavigationItemClick(it, navController)
+                    else onNavigationItemClick(it, navController, scope, bottomSheetScaffoldState)
                 },
                 icon = {
                     Icon(
@@ -58,6 +60,8 @@ fun drawerOpen(scope: CoroutineScope, scaffoldState: ScaffoldState) {
 fun onNavigationItemClick(
     it: BottomMenuData,
     navController: NavController,
+    scope: CoroutineScope,
+    bottomSheetScaffoldState: BottomSheetScaffoldState
 ) {
     navController.navigate(it.route) {
         navController.graph.startDestinationRoute?.let { route ->
@@ -65,7 +69,11 @@ fun onNavigationItemClick(
                 saveState = true
             }
         }
+        scope.launch {
+            bottomSheetScaffoldState.bottomSheetState.collapse()
+        }
         launchSingleTop = true
         restoreState = true
+
     }
 }
