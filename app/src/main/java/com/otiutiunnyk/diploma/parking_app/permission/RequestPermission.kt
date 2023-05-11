@@ -1,13 +1,16 @@
 package com.otiutiunnyk.diploma.parking_app.permission
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
@@ -74,7 +77,9 @@ fun PermissionDeniedContent(
                     Text(rationaleMessage)
                 },
                 confirmButton = {
-                    Button(onClick = onClick) {
+                    Button(
+                        onClick = onClick, modifier = Modifier.padding(bottom = 10.dp, end=10.dp),
+                    ) {
                         Text("Give Permission")
                     }
                 }
