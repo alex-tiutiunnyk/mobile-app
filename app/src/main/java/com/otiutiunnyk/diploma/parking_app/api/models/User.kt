@@ -6,6 +6,6 @@ data class User(
     var login: String,
     var password: String,
     var systemLanguage: String,
-    var email: String?,
-    var birthDate: Date?
+    var email: String? = null,
+    var birthDate: Date? = null
 )

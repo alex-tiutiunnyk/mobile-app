@@ -20,6 +20,8 @@ fun AddNewPlaceScreen(openNewParkingDialog: MutableState<Boolean>) {
 
 @Composable
 fun NewGoogleMaps(openNewParkingDialog: MutableState<Boolean>) {
+//    val newParkingRequestViewModel: NewParkingRequestViewModel = viewModel()
+
     val properties by remember {
         mutableStateOf(
             MapProperties(
@@ -76,3 +78,8 @@ fun NewGoogleMaps(openNewParkingDialog: MutableState<Boolean>) {
         )
     }
 }
+
+//fun callApiCreateNewParkingRequest(newParkingRequestViewModel: NewParkingRequestViewModel, newParkingRequest: NewParkingRequest) {
+//    val newParking = newParkingRequestViewModel.newParkingRequestResponse
+//    newParkingRequestViewModel.createNewParkingRequest(newParkingRequest)
+//}
