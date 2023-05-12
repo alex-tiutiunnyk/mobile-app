@@ -133,7 +133,7 @@ fun Navigation(
             bottomSheetScaffoldState
         )
         drawerNavigation()
-        commentsNavigation()
+        commentsNavigation(navController)
     }
 }
 
@@ -176,14 +176,14 @@ fun NavGraphBuilder.drawerNavigation() {
     }
 }
 
-fun NavGraphBuilder.commentsNavigation() {
+fun NavGraphBuilder.commentsNavigation(navController:NavController) {
     composable(MarkersData.Marker1.route) {
-        DetailedParkingPage(item = MarkersData.Marker1)
+        DetailedParkingPage(item = MarkersData.Marker1, navController)
     }
     composable(MarkersData.Marker2.route) {
-        DetailedParkingPage(item = MarkersData.Marker2)
+        DetailedParkingPage(item = MarkersData.Marker2, navController)
     }
     composable(MarkersData.Marker3.route) {
-        DetailedParkingPage(item = MarkersData.Marker3)
+        DetailedParkingPage(item = MarkersData.Marker3, navController)
     }
 }

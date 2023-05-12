@@ -1,8 +1,9 @@
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialApi::class)
 
 package com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -14,12 +15,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocalParking
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -225,35 +231,101 @@ fun onSnippetClick(
 
 
 @Composable
-fun DetailedParkingPage(item: MarkersData) {
+fun DetailedParkingPage(item: MarkersData, navController: NavController) {
     val scrollState = rememberScrollState()
-    val comments = mutableMapOf<String, MutableList<String>>(
+    val comments = mutableMapOf(
         "user1" to mutableListOf("Lorem Ipsum", "Fal jeos"),
-        "user2" to mutableListOf("Ipsum Data")
+        "user2" to mutableListOf("Ipsum Data"),
+        "Kevin" to mutableListOf("Data"),
+        "Marco" to mutableListOf("TEst sdlk")
     )
     var inputValue by remember {
         mutableStateOf("")
     }
-
+    IconButton(
+        modifier = Modifier.padding(top = 8.dp),
+        onClick = { navController.popBackStack() }) {
+        Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "")
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 50.dp)
+            .padding(bottom = 55.dp, top = 25.dp, start = 16.dp, end = 16.dp)
             .scrollable(
                 orientation = Orientation.Vertical,
                 state = scrollState
             )
     ) {
-        Row() {
-            Text(text = "${item.isForDisabledPerson}")
-            Text(text = "${item.isForElectricCar}")
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .clip(shape = CircleShape)
+                    .background(SolidColor(Color(android.graphics.Color.parseColor("#005A8C"))))
+                    .padding(all = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.LocalParking,
+                    contentDescription = "",
+                    modifier = Modifier.size(55.dp),
+                    tint = Color.White
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Loaded", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(text = "${item.occupied}/${item.capacity}", fontSize = 16.sp)
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Price /hour", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(text = "${item.pricePerHour}", fontSize = 16.sp)
+            }
+        }
+        Text(text = "Details", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        Row(modifier = Modifier.padding(top = 5.dp, bottom = 2.dp)) {
+            Icon(
+                modifier = Modifier.padding(end = 8.dp),
+                imageVector = if (item.isForDisabledPerson) Icons.Outlined.CheckCircle else Icons.Outlined.Cancel,
+                contentDescription = "",
+                tint = Color(android.graphics.Color.parseColor("#32CD32"))
+            )
+            Text(text = "Places for disabled people")
         }
         Row() {
-            Text(text = "${item.pricePerHour}")
+            Icon(
+                modifier = Modifier.padding(end = 8.dp),
+                imageVector = /*if (item.isForDisabledPerson) Icons.Outlined.CheckCircle else*/ Icons.Outlined.Cancel,
+                contentDescription = "",
+                tint = Color(android.graphics.Color.parseColor("#EC0D00"))
+            )
+            Text(text = "Places for electric cars")
         }
-        Text(text = "Comments", fontWeight = FontWeight.Bold)
 
 
+        Text(
+            modifier = Modifier.padding(top = 16.dp, bottom = 10.dp),
+            text = "Comments",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
         LazyColumn(Modifier.weight(1f)) {
             items(comments.keys.toList()) { login ->
                 comments[login]!!.forEach { message ->
@@ -264,7 +336,7 @@ fun DetailedParkingPage(item: MarkersData) {
         }
 
 
-        Spacer(modifier = Modifier.weight(1f))
+//        Spacer(modifier = Modifier.weight(1f))
         TextField(
             value = inputValue,
             onValueChange = { inputValue = it },
@@ -272,8 +344,8 @@ fun DetailedParkingPage(item: MarkersData) {
             maxLines = 2,
             textStyle = TextStyle(color = Color.Black, fontSize = 15.sp),
             modifier = Modifier
-                .padding(all = 16.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(top = 16.dp, bottom = 15.dp),
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.None,
                 autoCorrect = true,
@@ -300,7 +372,7 @@ fun DetailedParkingPage(item: MarkersData) {
 @Composable
 fun CommentItem(login: String, message: String) {
     Row(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
     ) {
         Card(
             modifier = Modifier
