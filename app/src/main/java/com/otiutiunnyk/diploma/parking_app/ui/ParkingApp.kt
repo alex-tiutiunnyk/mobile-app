@@ -26,10 +26,10 @@ import com.otiutiunnyk.diploma.parking_app.components.DrawerMenu
 import com.otiutiunnyk.diploma.parking_app.components.SubmitFab
 import com.otiutiunnyk.diploma.parking_app.ui.screen.*
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.AddNewPlaceScreen
-import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.DetailedParkingPage
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.ExploreScreen
 import com.otiutiunnyk.diploma.parking_app.ui.screen.bottomNav.FavouritesScreen
 import com.otiutiunnyk.diploma.parking_app.ui.screen.drawer.AboutScreen
+import com.otiutiunnyk.diploma.parking_app.ui.screen.maps.ParkingAreaInfo
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
@@ -178,12 +178,12 @@ fun NavGraphBuilder.drawerNavigation() {
 
 fun NavGraphBuilder.commentsNavigation(navController:NavController) {
     composable(MarkersData.Marker1.route) {
-        DetailedParkingPage(item = MarkersData.Marker1, navController)
+        ParkingAreaInfo(item = MarkersData.Marker1, navController)
     }
     composable(MarkersData.Marker2.route) {
-        DetailedParkingPage(item = MarkersData.Marker2, navController)
+        ParkingAreaInfo(item = MarkersData.Marker2, navController)
     }
     composable(MarkersData.Marker3.route) {
-        DetailedParkingPage(item = MarkersData.Marker3, navController)
+        ParkingAreaInfo(item = MarkersData.Marker3, navController)
     }
 }
